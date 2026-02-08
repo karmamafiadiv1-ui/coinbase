@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in - Coinbase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .coinbase-logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+        }
+        
+        .input-focus {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .input-focus:focus {
+            border-color: #0052FF;
+            box-shadow: 0 0 0 3px rgba(0, 82, 255, 0.2);
+        }
+        
+        .tail-bg {
+            background: linear-gradient(145deg, #f8f9fa, #ffffff);
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col">
+    <!-- Top bar -->
+    <header class="border-b border-gray-200 bg-white">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-x-8">
+                <!-- Logo -->
+                <div onclick="window.location.reload()" class="flex items-center gap-x-1 cursor-pointer">
+                    <div class="w-8 h-8 bg-[#0052FF] rounded-xl flex items-center justify-center text-white text-2xl font-bold coinbase-logo">C</div>
+                    <span class="text-2xl font-bold tracking-tighter text-[#0A0B0D] coinbase-logo">coinbase</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-x-6 text-sm font-medium text-gray-600">
+                <a href="#" class="hover:text-black transition-colors">Products</a>
+                <a href="#" class="hover:text-black transition-colors">Markets</a>
+                <a href="#" class="hover:text-black transition-colors">Learn</a>
+                <a href="#" class="hover:text-black transition-colors">Support</a>
+                <div class="h-5 w-px bg-gray-300"></div>
+                <button onclick="alert('Language selector would open here (demo)')" 
+                        class="flex items-center gap-x-1 hover:text-black transition-colors">
+                    <span>🌐</span>
+                    <span>English</span>
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <div class="flex-1 flex items-center justify-center tail-bg py-12 px-6">
+        <div class="w-full max-w-md">
+            <!-- Card -->
+            <div class="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
+                <!-- Header -->
+                <div class="px-10 pt-10 pb-6 text-center">
+                    <div class="flex justify-center mb-6">
+                        <div class="w-16 h-16 bg-[#0052FF] rounded-2xl flex items-center justify-center text-white text-5xl font-bold coinbase-logo shadow-inner">C</div>
+                    </div>
+                    <h1 class="text-3xl font-semibold text-[#0A0B0D] tracking-tight">Sign in to Coinbase</h1>
+                    <p class="text-gray-500 mt-2 text-sm">Welcome back! Please sign in to continue.</p>
+                </div>
+
+                <!-- Form -->
+                <form id="loginForm" onsubmit="handleLogin(event)" class="px-10 pb-10 space-y-6">
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1.5 tracking-widest">EMAIL OR PHONE NUMBER</label>
+                        <input id="email" 
+                               type="text" 
+                               placeholder="you@example.com"
+                               class="input-focus w-full px-5 py-4 bg-white border border-gray-300 rounded-2xl text-base focus:outline-none text-[#0A0B0D]"
+                               required>
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="text-xs font-medium text-gray-500 tracking-widest">PASSWORD</label>
+                            <a href="#" onclick="alert('Forgot password flow would start here (demo)')" 
+                               class="text-[#0052FF] text-sm font-medium hover:underline">Forgot password?</a>
+                        </div>
+                        <div class="relative">
+                            <input id="password" 
+                                   type="password" 
+                                   placeholder="••••••••"
+                                   class="input-focus w-full px-5 py-4 bg-white border border-gray-300 rounded-2xl text-base focus:outline-none text-[#0A0B0D] pr-12"
+                                   required>
+                            <button type="button" onclick="togglePassword()" 
+                                    class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                <i id="eyeIcon" class="fas fa-eye text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit"
+                            id="submitBtn"
+                            class="w-full bg-[#0052FF] hover:bg-[#0039CC] transition-colors text-white font-semibold py-4 rounded-2xl text-lg shadow-lg shadow-[#0052FF]/30 flex items-center justify-center gap-x-2">
+                        Sign in
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="relative flex items-center py-4">
+                        <div class="flex-1 h-px bg-gray-200"></div>
+                        <span class="px-6 text-xs font-medium text-gray-400 tracking-widest">OR</span>
+                        <div class="flex-1 h-px bg-gray-200"></div>
+                    </div>
+
+                    <!-- Google (fake) -->
+                    <button type="button" onclick="fakeSocialLogin()" 
+                            class="w-full border border-gray-300 hover:border-gray-400 transition-colors rounded-2xl py-4 flex items-center justify-center gap-x-3 text-base font-medium">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/2048px-Google_%22G%22_logo.svg.png" 
+                             alt="Google" class="w-5 h-5">
+                        Continue with Google
+                    </button>
+
+                    <!-- Apple (fake) -->
+                    <button type="button" onclick="fakeSocialLogin()" 
+                            class="w-full border border-gray-300 hover:border-gray-400 transition-colors rounded-2xl py-4 flex items-center justify-center gap-x-3 text-base font-medium">
+                        <i class="fab fa-apple text-2xl"></i>
+                        Continue with Apple
+                    </button>
+                </form>
+            </div>
+
+            <!-- Footer links -->
+            <div class="mt-8 text-center">
+                <p class="text-sm text-gray-500">
+                    New to Coinbase? 
+                    <a href="#" onclick="alert('Sign up page would open here (demo)')" 
+                       class="text-[#0052FF] font-medium hover:underline">Create an account</a>
+                </p>
+            </div>
+
+            <div class="mt-12 text-center text-[10px] text-gray-400 space-x-4">
+                <a href="#" class="hover:text-gray-600">Privacy</a>
+                <a href="#" class="hover:text-gray-600">Terms</a>
+                <span>© 2026 Coinbase, Inc.</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tailwind script already loaded via CDN
+        
+        function togglePassword() {
+            const pass = document.getElementById('password');
+            const icon = document.getElementById('eyeIcon');
+            if (pass.type === 'password') {
+                pass.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                pass.type = 'password';
+                icon.classList.add('fa-eye');
+                icon.classList.remove('fa-eye-slash');
+            }
+        }
+        
+        function handleLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = `
+                <svg class="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                Signing in...
+            `;
+            btn.disabled = true;
+            
+            // Fake network delay
+            setTimeout(() => {
+                const email = document.getElementById('email').value;
+                if (email.includes('@')) {
+                    alert('✅ Demo login successful!\n\nYou would now be redirected to the Coinbase dashboard.\n\n(This is a local clone — nothing was sent anywhere.)');
+                    // You could add a fake dashboard redirect here if you want
+                } else {
+                    alert('⚠️ Invalid email in demo. Try anything with @');
+                }
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 1500);
+        }
+        
+        function fakeSocialLogin() {
+            alert('Social login would open OAuth popup here (demo only)');
+        }
+        
+        // Auto-focus email on load
+        window.onload = () => {
+            document.getElementById('email').focus();
+        };
+    </script>
+</body>
+</html>
