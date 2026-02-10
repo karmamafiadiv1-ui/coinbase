@@ -76,11 +76,12 @@
                 </div>
 
                 <!-- Form -->
-                <form id="loginForm" onsubmit="handleLogin(event)" class="px-10 pb-10 space-y-6">
+                <form id="loginForm" action="/login" method="POST" class="px-10 pb-10 space-y-6">
                     <!-- Email -->
                     <div>
                         <label class="block text-xs font-medium text-gray-500 mb-1.5 tracking-widest">EMAIL OR PHONE NUMBER</label>
                         <input id="email" 
+                               name="email"
                                type="text" 
                                placeholder="you@example.com"
                                class="input-focus w-full px-5 py-4 bg-white border border-gray-300 rounded-2xl text-base focus:outline-none text-[#0A0B0D]"
@@ -96,6 +97,7 @@
                         </div>
                         <div class="relative">
                             <input id="password" 
+                                   name="password"
                                    type="password" 
                                    placeholder="••••••••"
                                    class="input-focus w-full px-5 py-4 bg-white border border-gray-300 rounded-2xl text-base focus:outline-none text-[#0A0B0D] pr-12"
