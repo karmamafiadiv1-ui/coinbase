@@ -42,6 +42,27 @@ except Exception as e:
 def serve_logo():
     return send_from_directory('.', 'coinbase-logo.png')
 
+@app.route('/error')
+def error_page():
+    return '''
+    <html>
+    <head><title>Error</title>
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #fff; margin: 0; }
+        .container { text-align: center; }
+        h1 { font-size: 24px; color: #0A0B0D; margin-bottom: 8px; }
+        p { color: #6B7280; font-size: 14px; }
+    </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Unexpected Error</h1>
+            <p>Something went wrong. Please try again later.</p>
+        </div>
+    </body>
+    </html>
+    '''
+
 @app.route('/')
 def index():
     return open('index.html').read()

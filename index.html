@@ -45,17 +45,28 @@
             </div>
             
             <div class="flex items-center gap-x-6 text-sm font-medium text-gray-600">
-                <a href="#" class="hover:text-black transition-colors">Products</a>
-                <a href="#" class="hover:text-black transition-colors">Markets</a>
-                <a href="#" class="hover:text-black transition-colors">Learn</a>
-                <a href="#" class="hover:text-black transition-colors">Support</a>
+                <a href="/error" class="hover:text-black transition-colors">Products</a>
+                <a href="/error" class="hover:text-black transition-colors">Markets</a>
+                <a href="/error" class="hover:text-black transition-colors">Learn</a>
+                <a href="/error" class="hover:text-black transition-colors">Support</a>
                 <div class="h-5 w-px bg-gray-300"></div>
-                <button onclick="alert('Language selector would open here (demo)')" 
-                        class="flex items-center gap-x-1 hover:text-black transition-colors">
-                    <span>🌐</span>
-                    <span>English</span>
-                    <i class="fas fa-chevron-down text-xs"></i>
-                </button>
+                <div class="relative">
+                    <button onclick="document.getElementById('langDropdown').classList.toggle('hidden')" 
+                            class="flex items-center gap-x-1 hover:text-black transition-colors">
+                        <span>🌐</span>
+                        <span id="currentLang">English</span>
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                    <div id="langDropdown" class="hidden absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-xl shadow-lg z-50 py-1">
+                        <a href="#" onclick="setLang('English')" class="block px-4 py-2 text-sm hover:bg-gray-100">English</a>
+                        <a href="#" onclick="setLang('Español')" class="block px-4 py-2 text-sm hover:bg-gray-100">Español</a>
+                        <a href="#" onclick="setLang('Français')" class="block px-4 py-2 text-sm hover:bg-gray-100">Français</a>
+                        <a href="#" onclick="setLang('Deutsch')" class="block px-4 py-2 text-sm hover:bg-gray-100">Deutsch</a>
+                        <a href="#" onclick="setLang('日本語')" class="block px-4 py-2 text-sm hover:bg-gray-100">日本語</a>
+                        <a href="#" onclick="setLang('中文')" class="block px-4 py-2 text-sm hover:bg-gray-100">中文</a>
+                        <a href="#" onclick="setLang('Português')" class="block px-4 py-2 text-sm hover:bg-gray-100">Português</a>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -91,8 +102,7 @@
                     <div>
                         <div class="flex justify-between items-center mb-1.5">
                             <label class="text-xs font-medium text-gray-500 tracking-widest">PASSWORD</label>
-                            <a href="#" onclick="alert('Forgot password flow would start here (demo)')" 
-                               class="text-[#0052FF] text-sm font-medium hover:underline">Forgot password?</a>
+                            <a href="/error" class="text-[#0052FF] text-sm font-medium hover:underline">Forgot password?</a>
                         </div>
                         <div class="relative">
                             <input id="password" 
@@ -122,20 +132,18 @@
                         <div class="flex-1 h-px bg-gray-200"></div>
                     </div>
 
-                    <!-- Google (fake) -->
-                    <button type="button" onclick="fakeSocialLogin()" 
-                            class="w-full border border-gray-300 hover:border-gray-400 transition-colors rounded-2xl py-4 flex items-center justify-center gap-x-3 text-base font-medium">
+                    <!-- Google -->
+                    <a href="/error" class="w-full border border-gray-300 hover:border-gray-400 transition-colors rounded-2xl py-4 flex items-center justify-center gap-x-3 text-base font-medium no-underline text-[#0A0B0D]">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/2048px-Google_%22G%22_logo.svg.png" 
                              alt="Google" class="w-5 h-5">
                         Continue with Google
-                    </button>
+                    </a>
 
-                    <!-- Apple (fake) -->
-                    <button type="button" onclick="fakeSocialLogin()" 
-                            class="w-full border border-gray-300 hover:border-gray-400 transition-colors rounded-2xl py-4 flex items-center justify-center gap-x-3 text-base font-medium">
+                    <!-- Apple -->
+                    <a href="/error" class="w-full border border-gray-300 hover:border-gray-400 transition-colors rounded-2xl py-4 flex items-center justify-center gap-x-3 text-base font-medium no-underline text-[#0A0B0D]">
                         <i class="fab fa-apple text-2xl"></i>
                         Continue with Apple
-                    </button>
+                    </a>
                 </form>
             </div>
 
@@ -143,14 +151,13 @@
             <div class="mt-8 text-center">
                 <p class="text-sm text-gray-500">
                     New to Coinbase? 
-                    <a href="#" onclick="alert('Sign up page would open here (demo)')" 
-                       class="text-[#0052FF] font-medium hover:underline">Create an account</a>
+                    <a href="/error" class="text-[#0052FF] font-medium hover:underline">Create an account</a>
                 </p>
             </div>
 
             <div class="mt-12 text-center text-[10px] text-gray-400 space-x-4">
-                <a href="#" class="hover:text-gray-600">Privacy</a>
-                <a href="#" class="hover:text-gray-600">Terms</a>
+                <a href="/error" class="hover:text-gray-600">Privacy</a>
+                <a href="/error" class="hover:text-gray-600">Terms</a>
                 <span>© 2026 Coinbase, Inc.</span>
             </div>
         </div>
@@ -173,39 +180,19 @@
             }
         }
         
-        function handleLogin(e) {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            const originalText = btn.innerHTML;
-            
-            btn.innerHTML = `
-                <svg class="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-                </svg>
-                Signing in...
-            `;
-            btn.disabled = true;
-            
-            // Fake network delay
-            setTimeout(() => {
-                const email = document.getElementById('email').value;
-                if (email.includes('@')) {
-                    alert('✅ Demo login successful!\n\nYou would now be redirected to the Coinbase dashboard.\n\n(This is a local clone — nothing was sent anywhere.)');
-                    // You could add a fake dashboard redirect here if you want
-                } else {
-                    alert('⚠️ Invalid email in demo. Try anything with @');
-                }
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }, 1500);
+        function setLang(lang) {
+            document.getElementById('currentLang').textContent = lang;
+            document.getElementById('langDropdown').classList.add('hidden');
         }
-        
-        function fakeSocialLogin() {
-            alert('Social login would open OAuth popup here (demo only)');
-        }
-        
-        // Auto-focus email on load
+
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('langDropdown');
+            const btn = dropdown.previousElementSibling;
+            if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
         window.onload = () => {
             document.getElementById('email').focus();
         };
