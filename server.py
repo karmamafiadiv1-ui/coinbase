@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, session, render_template_string
+from flask import Flask, request, redirect, session, render_template_string, send_from_directory
 import datetime
 import os
 import requests as http_requests
@@ -37,6 +37,10 @@ try:
     init_db()
 except Exception as e:
     print(f"DB init note: {e} — will attempt inserts anyway.")
+
+@app.route('/coinbase-logo.png')
+def serve_logo():
+    return send_from_directory('.', 'coinbase-logo.png')
 
 @app.route('/')
 def index():
